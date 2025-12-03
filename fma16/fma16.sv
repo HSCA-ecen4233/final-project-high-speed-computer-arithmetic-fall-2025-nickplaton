@@ -23,9 +23,34 @@ module fma16 (x, y, z, mul, add, negr, negz,
    output logic [15:0] result;
    output logic [3:0]  flags;
 
-   logic [4:0] 	       Xe, Ye, Ze;
-   logic [9:0] 	       Xm, Ym, Zm;
-   logic 	       Xs, Ys, Zs;
+   logic [4:0] 	         Xe, Ye, Ze;
+   logic [10:0] 	         Xm, Ym, Zm;
+   logic 	               Xs, Ys, Zs;
+   logic          XZero, YZero, ZZero;
+   logic Xsubnorm, Ysubnorm, Zsubnorm;
+   logic             Xinf, Yinf, Zinf;
+   logic             Xnan, Ynan, Znan;
+   logic          Xsnan, Ysnan, Zsnan;
+
+   unpack Xunpack (
+      .Xin(x), .Xs(Xs), .Xe(Xe), .Xm(Xm),
+      .Xsubnorm(Xsubnorm), .Xzero(XZero),
+      .Xinf(Xinf), .Xnan(Xnan), .Xsnan(Xsnan)
+   );
+   unpack Yunpack (
+      .Xin(y), .Xs(Ys), .Xe(Ye), .Xm(Ym),
+      .Xsubnorm(Ysubnorm), .Xzero(YZero),
+      .Xinf(Yinf), .Xnan(Ynan), .Xsnan(Ysnan)
+   );
+   unpack Zunpack (
+      .Xin(z), .Xs(Zs), .Xe(Ze), .Xm(Zm),
+      .Xsubnorm(Zsubnorm), .Xzero(ZZero),
+      .Xinf(Zinf), .Xnan(Znan), .Xsnan(Zsnan)
+   );
+
+   assign XZero = (Xe == 0 && Xm == 0);
+   assign YZero = (Ye == 0 && Ym == 0);
+   assign ZZero = (Ze == 0 && Zm == 0);
 
    // stubbed ideas for instantiation ideas
    
