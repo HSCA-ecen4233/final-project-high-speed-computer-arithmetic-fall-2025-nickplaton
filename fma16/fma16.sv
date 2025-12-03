@@ -52,13 +52,28 @@ module fma16 (x, y, z, mul, add, negr, negz,
    assign YZero = (Ye == 0 && Ym == 0);
    assign ZZero = (Ze == 0 && Zm == 0);
 
-   // stubbed ideas for instantiation ideas
+   logic [6:0] Pe;
+   fmaexpadd expadd(.Xe(Xe), .Ye(Ye), .XZero(XZero), .YZero(YZero), .Pe(Pe));
    
-   // fmaexpadd expadd(.Xe, .Ye, .XZero, .YZero, .Pe);
-   // fmamult mult(.Xm, .Ym, .Pm);
-   // fmasign sign(.OpCtrl, .Xs, .Ys, .Zs, .Ps, .As, .InvA);
-   // fmaalign align(.Ze, .Zm, .XZero, .YZero, .ZZero, .Xe, .Ye, .Am, .ASticky, .KillProd);
-   // fmaadd add(.Am, .Pm, .Ze, .Pe, .Ps, .KillProd, .ASticky, .AmInv, .PmKilled, .InvA, .Sm, .Se, .Ss);
+   logic [21:0] Pm;
+   fmamult mult(.Xm(Xm), .Ym(Ym), .Pm(Pm));
+
+   logic Ps, As, InvA;
+   fmasign sign(.OpCtrl(negz), .Xs(Xs), .Ys(Ys), .Zs(Zs), .Ps(Ps), .As(As), .InvA(InvA));
+
+   logic [33:0] Am;
+   logic ASticky, KillProd;
+   fmaalign align(.Ze(Ze), .Zm(Zm), .XZero(XZero), .YZero(YZero), .ZZero(ZZero), .Xe(Xe), .Ye(Ye), .Am, .ASticky, .KillProd);
+   
+   logic [33:0] AmInv;
+   logic [21:0] PmKilled;
+   logic Ss;
+   logic [6:0] Se;
+   logic [21:0] Sm;
+   fmaadd add(.Am(Am), .Pm(Pm), .Ze(Ze), .Pe(Pe), .Ps(Ps), .KillProd(KillProd), .ASticky(ASticky), .AmInv(AmInv), .PmKilled(PmKilled), .InvA(InvA), .Sm(Sm), .Se(Se), .Ss(Ss));
+   
+   assign result = {Ss, Se[6:2], Sm[21:12]};
+
    // fmalza lza (.A(AmInv), .Pm(PmKilled), .Cin(InvA & (~ASticky | KillProd)), .sub(InvA), .SCnt);
 
  
