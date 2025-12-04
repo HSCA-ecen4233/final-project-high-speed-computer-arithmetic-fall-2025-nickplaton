@@ -4,7 +4,7 @@ module fmaalign (Ze, Zm,
                  Am, ASticky, KillProd);
 
     input logic [4:0] Ze, Xe, Ye;
-    input logic XZero, YZero, ZZero,
+    input logic XZero, YZero, ZZero;
     input logic [10:0] Zm;
 
     output logic [33:0] Am;
@@ -17,16 +17,16 @@ module fmaalign (Ze, Zm,
     logic [12:0] Zmpresh; // Zm << (Nf + 2)
     logic [43:0] Zmshift;
 
-    assign Acnt = (Xe + Ye - 15) - Ze + 12;
+    assign Acnt = ({2'b0, Xe} + {2'b0, Ye} - 7'd15) - {2'b0, Ze} + 7'd12;
     assign KillZ  = Acnt > 33;
-    assign Zmpresh = Zm << 12;
+    assign Zmpresh = {2'b0, Zm} << 12;
     
     assign KillProd = Acnt[6] | XZero | YZero;
 
-    assign Zmshift = KillProd ? Zm : (KillZ ? 0 : (Zmpresh >> Acnt));
+    assign Zmshift = KillProd ? {12'b0, Zm, 21'b0} : (KillZ ? 0 : ({Zmpresh, 31'b0} >> Acnt));
 
     assign ASticky = KillProd ? ~(XZero|YZero) : (KillZ ? ~ZZero : (|(Zmshift[9:0])));
 
-    assign Am = Zmshift >> 10;
+    assign Am = {Zmshift >> 10}[33:0];
 
 endmodule
