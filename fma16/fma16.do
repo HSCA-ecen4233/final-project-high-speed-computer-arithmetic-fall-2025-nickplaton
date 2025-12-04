@@ -27,7 +27,7 @@ if [file exists work] {
 vlib work
 
 # compile source files
-vlog -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv
+vlog -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv
 
 # start and run simulation
 vsim -voptargs=+acc work.tb_fma16
@@ -42,6 +42,34 @@ add wave -hex /tb_fma16/y
 add wave -hex /tb_fma16/z
 add wave -hex /tb_fma16/result
 add wave -hex /tb_fma16/rexpected
+add wave -noupdate -divider -height 32 "internals"
+add wave -hex /tb_fma16/dut/Ze
+add wave -hex /tb_fma16/dut/Zm
+add wave -hex /tb_fma16/dut/Zs
+add wave -hex /tb_fma16/dut/ZZero
+add wave -hex /tb_fma16/dut/Zsubnorm
+add wave -hex /tb_fma16/dut/Zinf
+add wave -hex /tb_fma16/dut/Znan
+add wave -hex /tb_fma16/dut/Zsnan
+
+add wave -hex /tb_fma16/dut/Zunpack/Xenonz
+add wave -hex /tb_fma16/dut/Zunpack/Xf
+add wave -hex /tb_fma16/dut/Zunpack/Xfzero
+
+# add wave -hex /tb_fma16/dut/Pe
+# add wave -hex /tb_fma16/dut/Pm
+# add wave -hex /tb_fma16/dut/Ps
+add wave -hex /tb_fma16/dut/Am
+add wave -hex /tb_fma16/dut/ASticky
+add wave -hex /tb_fma16/dut/KillProd
+add wave -hex /tb_fma16/dut/As
+add wave -hex /tb_fma16/dut/Se
+add wave -hex /tb_fma16/dut/Sm
+add wave -hex /tb_fma16/dut/Ss
+add wave -hex /tb_fma16/dut/Senorm
+add wave -hex /tb_fma16/dut/Smnorm
+add wave -hex /tb_fma16/dut/Mcnt
+
 
 run -all
 quit

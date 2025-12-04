@@ -72,7 +72,17 @@ module fma16 (x, y, z, mul, add, negr, negz,
    logic [33:0] Sm;
    fmaadd finadd(.Am(Am), .Pm(Pm), .Ze(Ze), .Pe(Pe), .Ps(Ps), .KillProd(KillProd), .ASticky(ASticky), .AmInv(AmInv), .PmKilled(PmKilled), .InvA(InvA), .Sm(Sm), .Se(Se), .Ss(Ss));
    
-   assign result = {Ss, Se[6:2], Sm[21:12]};
+   logic [6:0] Mcnt;
+   lzc normalizer (.num(Sm), .ZeroCnt(Mcnt));
+   
+   logic [33:0] Smnorm;
+   logic [6:0] Senorm;
+   assign Smnorm = Sm << Mcnt;
+   assign Senorm = Se - Mcnt + 7'd11;
+
+   assign result = {Ss, Senorm[4:0], Smnorm[32:23]};
+   //assign result = {Ss, Se[4:0], Sm[21:12]};
+   //assign result = {Ss, Se[4:0], Smnorm[32:23]};
 
    // fmalza lza (.A(AmInv), .Pm(PmKilled), .Cin(InvA & (~ASticky | KillProd)), .sub(InvA), .SCnt);
 

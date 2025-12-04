@@ -31,7 +31,7 @@ module tb_fma16;
   // at start of test, load vectors and pulse reset
   initial
     begin
-      $readmemh("tests/fmul_0.tv", testvectors);
+      $readmemh("tests/fadd_0.tv", testvectors);
       vectornum = 0; errors = 0;
       reset = 1; #22; reset = 0;
     end
@@ -55,6 +55,8 @@ module tb_fma16;
 	vectornum = vectornum + 1;
 	if (testvectors[vectornum] === 'x) begin 
            $fdisplay(handle3, "%d tests completed with %d errors", 
+	             vectornum, errors);
+           $display(handle3, "%d tests completed with %d errors", 
 	             vectornum, errors);
            $stop;
 	end
