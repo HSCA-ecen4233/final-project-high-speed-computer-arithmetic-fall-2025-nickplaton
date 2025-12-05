@@ -18,7 +18,7 @@ module unpack (Xin, Xs, Xe, Xm, Xsubnorm, Xzero, Xinf, Xnan, Xsnan);
 
     // Output Signals
     assign Xs = Xin[15];
-    assign Xe = Xin[14:10] + (~Xenonz);
+    assign Xe = Xin[14:10] + {4'b0, (~Xenonz)};
     assign Xm = {Xenonz, Xf};
 
     assign Xsubnorm = (~Xenonz) & (~Xfzero);

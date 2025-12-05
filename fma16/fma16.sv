@@ -61,18 +61,31 @@ module fma16 (x, y, z, mul, add, negr, negz,
    logic Ps, As, InvA;
    fmasign sign(.OpCtrl(negz), .Xs(Xs), .Ys(Ys), .Zs(Zs), .Ps(Ps), .As(As), .InvA(InvA));
 
-   logic [33:0] Am;
+   logic [35:0] Am;
    logic ASticky, KillProd;
    fmaalign align(.Ze(Ze), .Zm(Zm), .XZero(XZero), .YZero(YZero), .ZZero(ZZero), .Xe(Xe), .Ye(Ye), .Am, .ASticky, .KillProd);
    
-   logic [33:0] AmInv;
+   logic [35:0] AmInv;
    logic [21:0] PmKilled;
    logic Ss;
    logic [6:0] Se;
-   logic [33:0] Sm;
+   logic [35:0] Sm;
    fmaadd finadd(.Am(Am), .Pm(Pm), .Ze(Ze), .Pe(Pe), .Ps(Ps), .KillProd(KillProd), .ASticky(ASticky), .AmInv(AmInv), .PmKilled(PmKilled), .InvA(InvA), .Sm(Sm), .Se(Se), .Ss(Ss));
    
-   assign result = {Ss, Se[6:2], Sm[21:12]};
+   logic [6:0] Mcnt;
+   lzc normalizer (.num(Sm), .ZeroCnt(Mcnt));
+   
+   logic [35:0] Smnorm;
+   logic [6:0] Senorm;
+   assign Smnorm = Sm << Mcnt;
+   assign Senorm = Se - Mcnt + 7'd13;
+
+   logic [9:0] Smrnd;
+   logic [6:0] Sernd;
+   rne round (.Smnorm(Smnorm), .Senorm(Senorm), .ASticky(ASticky), .Smrnd(Smrnd), .Sernd(Sernd));
+
+   assign result = {Ss, Sernd[4:0], Smrnd};
+   //assign result = {Ss, Senorm[4:0], Smnorm[34:25]};
 
    // fmalza lza (.A(AmInv), .Pm(PmKilled), .Cin(InvA & (~ASticky | KillProd)), .sub(InvA), .SCnt);
 
