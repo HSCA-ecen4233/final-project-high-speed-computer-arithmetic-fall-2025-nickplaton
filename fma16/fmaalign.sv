@@ -20,12 +20,12 @@ module fmaalign (Ze, Zm,
     //assign Acnt = ({2'b0, Xe} + {2'b0, Ye} - 7'd15) - {2'b0, Ze} + 7'd12;
     assign Acnt = ({2'b0, Xe} + {2'b0, Ye} - 7'd15) - {2'b0, Ze} + 7'd13;
     //assign KillZ  = Acnt > 33;
-    assign KillZ  = $signed(Acnt) > 35;
+    assign KillZ  = $signed(Acnt) > $signed(7'd35);
     //assign Zmpresh = {2'b0, Zm} << 12;
     //assign Zmpresh = {Zm, 2'b0};
     assign Zmpresh = {Zm, 35'b0};
     
-    assign KillProd = Acnt[6] | XZero | YZero;
+    assign KillProd = (Acnt[6] & ~ZZero) | XZero | YZero;
 
     always_comb begin
         if (KillProd) begin

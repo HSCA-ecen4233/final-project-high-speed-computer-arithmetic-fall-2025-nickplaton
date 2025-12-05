@@ -34,23 +34,21 @@ module fma16 (x, y, z, mul, add, negr, negz,
 
    unpack Xunpack (
       .Xin(x), .Xs(Xs), .Xe(Xe), .Xm(Xm),
-      .Xsubnorm(Xsubnorm), .Xzero(XZero),
+      .Xsubnorm(Xsubnorm), .XZero(XZero),
       .Xinf(Xinf), .Xnan(Xnan), .Xsnan(Xsnan)
    );
    unpack Yunpack (
       .Xin(y), .Xs(Ys), .Xe(Ye), .Xm(Ym),
-      .Xsubnorm(Ysubnorm), .Xzero(YZero),
+      .Xsubnorm(Ysubnorm), .XZero(YZero),
       .Xinf(Yinf), .Xnan(Ynan), .Xsnan(Ysnan)
    );
    unpack Zunpack (
       .Xin(z), .Xs(Zs), .Xe(Ze), .Xm(Zm),
-      .Xsubnorm(Zsubnorm), .Xzero(ZZero),
+      .Xsubnorm(Zsubnorm), .XZero(ZZero),
       .Xinf(Zinf), .Xnan(Znan), .Xsnan(Zsnan)
    );
 
-   //assign XZero = (Xe == 0 && Xm == 0);
-   //assign YZero = (Ye == 0 && Ym == 0);
-   //assign ZZero = (Ze == 0 && Zm == 0);
+   
 
    logic [6:0] Pe;
    fmaexpadd expadd(.Xe(Xe), .Ye(Ye), .XZero(XZero), .YZero(YZero), .Pe(Pe));
@@ -77,14 +75,34 @@ module fma16 (x, y, z, mul, add, negr, negz,
    
    logic [35:0] Smnorm;
    logic [6:0] Senorm;
-   assign Smnorm = Sm << Mcnt;
-   assign Senorm = Se - Mcnt + 7'd13;
+   logic Smzero;
+   assign Smzero = ~|Sm;
+   assign Smnorm = ~Smzero ? (Sm << Mcnt) : 36'b0;
+   logic [6:0] Setemp;
+   assign Setemp = (Se - Mcnt + 13);
+   assign Senorm = ~Smzero ? Setemp : 7'b0;
 
    logic [9:0] Smrnd;
    logic [6:0] Sernd;
    rne round (.Smnorm(Smnorm), .Senorm(Senorm), .ASticky(ASticky), .Smrnd(Smrnd), .Sernd(Sernd));
 
-   assign result = {Ss, Sernd[4:0], Smrnd};
+   //assign flags[0] = (ASticky|Guard|Overflow|Round)&~(InfIn|NaNIn|DivByZero|Invalid);
+   //assign underflow = Setemp < 0;
+   //assign flags[2] = (Senorm >= 5'd31);
+
+
+   logic [15:0] int_result;
+   always_comb begin
+      if (roundmode == 2'b1) begin
+         int_result = {Ss, Sernd[4:0], Smrnd};
+      end
+      else begin
+         int_result = {(~Smzero ? Ss : 1'b0), Senorm[4:0], Smnorm[34:25]}; // broken
+      end
+   end
+
+   fmaflags set_nv (Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, Xinf, Yinf, Zinf, XZero, YZero, ZZero, ASticky, Smnorm, Senorm, int_result, result, flags[3], flags[2], flags[1], flags[0]);
+   //assign result = {Ss, Sernd[4:0], Smrnd};
    //assign result = {Ss, Senorm[4:0], Smnorm[34:25]};
 
    // fmalza lza (.A(AmInv), .Pm(PmKilled), .Cin(InvA & (~ASticky | KillProd)), .sub(InvA), .SCnt);

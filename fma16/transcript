@@ -1,21 +1,7 @@
-# //  Questa Sim-64
-# //  Version 2023.4_3 linux_x86_64 Feb 17 2024
-# //
-# //  Copyright 1991-2024 Mentor Graphics Corporation
-# //  All Rights Reserved.
-# //
-# //  QuestaSim and its associated documentation contain trade
-# //  secrets and commercial or financial information that are the property of
-# //  Mentor Graphics Corporation and are privileged, confidential,
-# //  and exempt from disclosure under the Freedom of Information Act,
-# //  5 U.S.C. Section 552. Furthermore, this information
-# //  is prohibited from disclosure under the Trade Secrets Act,
-# //  18 U.S.C. Section 1905.
-# //
 # do fma16.do
-# QuestaSim-64 vlog 2023.4_3 Compiler 2024.02 Feb 17 2024
-# Start time: 15:33:47 on Dec 04,2025
-# vlog -reportprogress 300 -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv 
+# Model Technology ModelSim SE-64 vlog 2021.3 Compiler 2021.07 Jul 13 2021
+# Start time: 12:50:45 on Dec 05,2025
+# vlog -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv rne.sv fmaflags.sv 
 # -- Compiling module fma16
 # -- Compiling module tb_fma16
 # -- Compiling module fmaadd
@@ -25,16 +11,29 @@
 # -- Compiling module fmasign
 # -- Compiling module unpack
 # -- Compiling module lzc
+# -- Compiling module rne
+# -- Compiling module fmaflags
 # 
 # Top level modules:
 # 	tb_fma16
-# End time: 15:33:48 on Dec 04,2025, Elapsed time: 0:00:01
+# End time: 12:50:45 on Dec 05,2025, Elapsed time: 0:00:00
 # Errors: 0, Warnings: 0
 # vsim -voptargs="+acc" work.tb_fma16 
-# Start time: 15:33:48 on Dec 04,2025
+# Start time: 12:50:45 on Dec 05,2025
 # ** Note: (vsim-3812) Design is being optimized...
-# ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
-# ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
+# //  ModelSim SE-64 2021.3 Jul 13 2021
+# //
+# //  Copyright 1991-2021 Mentor Graphics Corporation
+# //  All Rights Reserved.
+# //
+# //  ModelSim SE-64 and its associated documentation contain trade
+# //  secrets and commercial or financial information that are the property of
+# //  Mentor Graphics Corporation and are privileged, confidential,
+# //  and exempt from disclosure under the Freedom of Information Act,
+# //  5 U.S.C. Section 552. Furthermore, this information
+# //  is prohibited from disclosure under the Trade Secrets Act,
+# //  18 U.S.C. Section 1905.
+# //
 # Loading sv_std.std
 # Loading work.tb_fma16(fast)
 # Loading work.fma16(fast)
@@ -45,7 +44,14 @@
 # Loading work.fmaalign(fast)
 # Loading work.fmaadd(fast)
 # Loading work.lzc(fast)
-#           2      1060 tests completed with        270 errors
+# Loading work.rne(fast)
+# Loading work.fmaflags(fast)
+# ** Warning: (vsim-PLI-3407) Too many data words read on line 30703 of file "tests/fma_special_rz.tv". (Current address [30001], address range [0:30000])    : testbench.sv(34)
+#    Time: 0 ns  Iteration: 0  Instance: /tb_fma16
+#           2     30001 tests completed with         56 errors
 # ** Note: $stop    : testbench.sv(61)
-#    Time: 10615 ns  Iteration: 1  Instance: /tb_fma16
+#    Time: 300025 ns  Iteration: 1  Instance: /tb_fma16
 # Break in Module tb_fma16 at testbench.sv line 61
+# Stopped at testbench.sv line 61
+# End time: 12:50:46 on Dec 05,2025, Elapsed time: 0:00:01
+# Errors: 0, Warnings: 1

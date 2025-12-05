@@ -1,11 +1,11 @@
-module unpack (Xin, Xs, Xe, Xm, Xsubnorm, Xzero, Xinf, Xnan, Xsnan);
+module unpack (Xin, Xs, Xe, Xm, Xsubnorm, XZero, Xinf, Xnan, Xsnan);
     
     input logic [15:0] Xin;
 
     output logic Xs;
     output logic [4:0] Xe;
     output logic [10:0] Xm;
-    output logic Xsubnorm, Xzero, Xinf, Xnan, Xsnan;
+    output logic Xsubnorm, XZero, Xinf, Xnan, Xsnan;
 
     logic Xemax, Xenonz, Xfzero;
     logic [9:0] Xf;
@@ -22,7 +22,7 @@ module unpack (Xin, Xs, Xe, Xm, Xsubnorm, Xzero, Xinf, Xnan, Xsnan);
     assign Xm = {Xenonz, Xf};
 
     assign Xsubnorm = (~Xenonz) & (~Xfzero);
-    assign Xzero = (~Xenonz) & Xfzero;
+    assign XZero = (~Xenonz) & Xfzero;
     assign Xinf = Xemax & Xfzero;
     assign Xnan = Xemax & (~Xfzero);
     assign Xsnan = Xnan & (~Xf[9]);

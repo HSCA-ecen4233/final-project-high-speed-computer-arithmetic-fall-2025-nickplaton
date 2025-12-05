@@ -20,7 +20,8 @@ module fmaadd (Am, Pm, Ze, Pe, Ps, KillProd,
     assign AmInv = ~InvA ? Am : ~Am;
     assign PmKilled = ~KillProd ? Pm : 22'b0;
     assign {NegSum, PreSum} = {13'b0, PmKilled, 2'b0} + {InvA, AmInv} + {35'b0,(~ASticky|KillProd)&InvA};
-    assign NegPreSum = Am + {12'b1, ~PmKilled, 2'b0} + {33'b0, (~ASticky|~KillProd), 2'b0}; // Why does it trail with 2'b0?
+    //assign NegPreSum = Am + {12'b1, ~PmKilled, 2'b0} + {33'b0, (~ASticky|~KillProd), 2'b0}; // Why does it trail with 2'b0?
+    assign NegPreSum = Am + {{12{1'b1}}, ~PmKilled, 2'b0} + {33'b0, (~ASticky|~KillProd), 2'b0}; // Why does it trail with 2'b0?
     //assign NegSum = PreSum[33];
     //assign NegSum = PreSum[35];
 

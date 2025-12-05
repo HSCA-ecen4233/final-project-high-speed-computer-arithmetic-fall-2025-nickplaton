@@ -27,7 +27,7 @@ if [file exists work] {
 vlib work
 
 # compile source files
-vlog -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv
+vlog -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv rne.sv fmaflags.sv
 
 # start and run simulation
 vsim -voptargs=+acc work.tb_fma16
@@ -83,6 +83,11 @@ add wave -hex /tb_fma16/dut/Ss
 add wave -hex /tb_fma16/dut/Senorm
 add wave -hex /tb_fma16/dut/Smnorm
 add wave -hex /tb_fma16/dut/Mcnt
+add wave -hex /tb_fma16/dut/Sernd
+add wave -hex /tb_fma16/dut/Smrnd
+add wave -hex /tb_fma16/dut/round/rnd
+
+add wave -hex -r /tb_fma16/dut/set_nv/*
 
 
 run -all
