@@ -94,10 +94,10 @@ module fma16 (x, y, z, mul, add, negr, negz,
    logic [15:0] int_result;
    always_comb begin
       if (roundmode == 2'b1) begin
-         int_result = {Ss, Sernd[4:0], Smrnd};
+         int_result = {(((~Smzero)|(Zs&ZZero))? Ss : 1'b0), Sernd[4:0], Smrnd};
       end
       else begin
-         int_result = {(~Smzero ? Ss : 1'b0), Senorm[4:0], Smnorm[34:25]}; // broken
+         int_result = {(((~Smzero)|(Zs&ZZero))? Ss : 1'b0), Senorm[4:0], Smnorm[34:25]}; // broken
       end
    end
 
