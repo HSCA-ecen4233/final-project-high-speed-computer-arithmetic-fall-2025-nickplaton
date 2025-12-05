@@ -14,7 +14,7 @@
 # //
 # do fma16.do
 # QuestaSim-64 vlog 2023.4_3 Compiler 2024.02 Feb 17 2024
-# Start time: 00:16:20 on Dec 04,2025
+# Start time: 15:33:47 on Dec 04,2025
 # vlog -reportprogress 300 -lint fma16.sv testbench.sv fmaadd.sv fmaalign.sv fmaexpadd.sv fmamult.sv fmasign.sv unpack.sv lzc.sv 
 # -- Compiling module fma16
 # -- Compiling module tb_fma16
@@ -28,10 +28,10 @@
 # 
 # Top level modules:
 # 	tb_fma16
-# End time: 00:16:20 on Dec 04,2025, Elapsed time: 0:00:00
+# End time: 15:33:48 on Dec 04,2025, Elapsed time: 0:00:01
 # Errors: 0, Warnings: 0
 # vsim -voptargs="+acc" work.tb_fma16 
-# Start time: 00:16:23 on Dec 04,2025
+# Start time: 15:33:48 on Dec 04,2025
 # ** Note: (vsim-3812) Design is being optimized...
 # ** Warning: (vopt-10587) Some optimizations are turned off because the +acc switch is in effect. This will cause your simulation to run slowly. Please use -access/-debug to maintain needed visibility.
 # ** Note: (vsim-12126) Error and warning message counts have been restored: Errors=0, Warnings=1.
@@ -45,7 +45,7 @@
 # Loading work.fmaalign(fast)
 # Loading work.fmaadd(fast)
 # Loading work.lzc(fast)
-#           2         4 tests completed with          4 errors
+#           2      1060 tests completed with        270 errors
 # ** Note: $stop    : testbench.sv(61)
-#    Time: 55 ns  Iteration: 1  Instance: /tb_fma16
+#    Time: 10615 ns  Iteration: 1  Instance: /tb_fma16
 # Break in Module tb_fma16 at testbench.sv line 61

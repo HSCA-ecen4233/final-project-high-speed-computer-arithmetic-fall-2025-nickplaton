@@ -56,13 +56,27 @@ add wave -hex /tb_fma16/dut/Zunpack/Xenonz
 add wave -hex /tb_fma16/dut/Zunpack/Xf
 add wave -hex /tb_fma16/dut/Zunpack/Xfzero
 
-# add wave -hex /tb_fma16/dut/Pe
-# add wave -hex /tb_fma16/dut/Pm
-# add wave -hex /tb_fma16/dut/Ps
+add wave -hex /tb_fma16/dut/Pe
+add wave -hex /tb_fma16/dut/Pm
+add wave -hex /tb_fma16/dut/Ps
 add wave -hex /tb_fma16/dut/Am
 add wave -hex /tb_fma16/dut/ASticky
 add wave -hex /tb_fma16/dut/KillProd
+
+add wave -hex /tb_fma16/dut/align/Acnt
+add wave -hex /tb_fma16/dut/align/KillZ
+add wave -hex /tb_fma16/dut/align/Zmpresh
+add wave -hex /tb_fma16/dut/align/Zmshift
+
 add wave -hex /tb_fma16/dut/As
+add wave -hex /tb_fma16/dut/InvA
+
+add wave -hex /tb_fma16/dut/finadd/PreSum
+add wave -hex /tb_fma16/dut/finadd/NegPreSum
+add wave -hex /tb_fma16/dut/finadd/NegSum
+
+add wave -hex /tb_fma16/dut/AmInv
+add wave -hex /tb_fma16/dut/PmKilled
 add wave -hex /tb_fma16/dut/Se
 add wave -hex /tb_fma16/dut/Sm
 add wave -hex /tb_fma16/dut/Ss
