@@ -14,7 +14,8 @@ module rne (Smnorm, Senorm, ASticky, Smrnd, Sernd);
     // G = Smnorm[24]
     // R = Smnorm[23]
     // S = ASticky
-    assign rnd = Smnorm[24] & (Smnorm[23]|Smnorm[25]|ASticky);
+    //assign rnd = Smnorm[24] & (Smnorm[23]|Smnorm[25]|ASticky);
+    assign rnd = Smnorm[24] & (Smnorm[23]|Smnorm[25]|(|Smnorm[22:0]));
 
     always_comb begin
         if (rnd) begin
