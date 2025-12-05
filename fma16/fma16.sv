@@ -80,9 +80,12 @@ module fma16 (x, y, z, mul, add, negr, negz,
    assign Smnorm = Sm << Mcnt;
    assign Senorm = Se - Mcnt + 7'd13;
 
-   assign result = {Ss, Senorm[4:0], Smnorm[34:25]};
-   //assign result = {Ss, Se[4:0], Sm[21:12]};
-   //assign result = {Ss, Se[4:0], Smnorm[34:25]};
+   logic [9:0] Smrnd;
+   logic [6:0] Sernd;
+   rne round (.Smnorm(Smnorm), .Senorm(Senorm), .ASticky(ASticky), .Smrnd(Smrnd), .Sernd(Sernd));
+
+   assign result = {Ss, Sernd[4:0], Smrnd};
+   //assign result = {Ss, Senorm[4:0], Smnorm[34:25]};
 
    // fmalza lza (.A(AmInv), .Pm(PmKilled), .Cin(InvA & (~ASticky | KillProd)), .sub(InvA), .SCnt);
 
