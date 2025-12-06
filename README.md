@@ -3,32 +3,32 @@
 
 ## Introduction
 **Completed FMA Block Diagram:**  
+![FMA16 Block Diagram](block_diagram.png)
 
 **Explanation of Architecture:**  
-  In this design, there are 11 major blocks that perform functions of the FMA:
+  The design is split into several modules:
 
-- *fma16.sv*: Contains instantiations of all other modules, connecting each of the blocks and returning the result.
-- *unpack.sv*: Unpacks X, Y, and Z into their sign, exponent, and mantissa components. While doing this, it follows IEEE steps, such as adding 1'b1 to the mantissa for the hidden bit and keeping the exponent normalized. Handles signals such as Xsubnorm, Xzero, Xinf, XNaN, and XsNaN.
-- *fmaexpadd.sv*: Adds the exponents of each multiplicand and removes the bias according to the IEEE half precision floating point number bias.
-- *fmamult.sv*: Multiplies the mantissa's of X and Y.
-- *fmasign.sv*: Uses an XOR to find the sign of the product of X and Y and uses the sign of Z to decide addition or subraction. Then, InvA is set as the XOR of those two outcomes.
-- *fmaalign.sv*: Aligns the product and Z to be added later. There are three separate calculations for this module, one for when the product is insignificant, one for when Z is insignificant, and one wher both are significant. A "sticky" bit is calculated for as well, keeping track of any precision lost in alignment.
-- *fmaadd.sv*: Using the aligned values from fmaalign.sv, this module adds the values together. The module calculates for both addition and subtraction and uses the InvA from before to decide whether the output is the added or subtracted value.
-- *lzc.lzc.sv*: Counts the amount of leading zeros in the mantissa.
-- *lzc.normalizer.sv*: Shifts the matntissa the amount decided by the lzc module to normalize the manitssa. The amount it was shifted is added to the exponent.
-- *round.sv*: Rounds the values according to the rounding mode. Implemented is both RNE and RZ, with roundmode 2'b00 signifying RZ and everything else signifying RNE. The RZ values are generated suing truncation, while the RNE values are generated using LSB, guard, sticky, and round bits. Importantly, the RNE value has to make sure it is normalized in the case that a result has an overflow after rounding. This is done by shifting the result back and adding one to the exponenet.
--*fmaflags.sv*: Handles all special cases and flags using the values from the unpack and round modules.
+- *fma16.sv*: Top level module which takes inputs, instantiates the other modules, and outputs the result and flags.
+- *unpack.sv*: Splits x, y, z inputs into separate signals for their exponent, mantissa, and sign. It also outputs whether the inputs are special cases: subnormal, zero, infinity, NaN, and Signaling NaN.
+- *fmaexpadd.sv*: Sums exponents of X and Y, given they are non-zero, and subtracts bias to output Pe.
+- *fmamult.sv*: Multiplies mantissas of X and Y and ouputs to Pm.
+- *fmasign.sv*: Determines the sign of the product Ps. Has skeleton code to support subtraction and output based on that, but that is not used here.
+- *fmaalign.sv*: Shifts Zm to align with Pm for addition and outputs shift to Zmshift.
+- *fmaadd.sv*: Sums Product and Z to produce Ss, Se, and Sm. PmKilled is not used, as this FMA utilizes an lzc.
+- *lzc.sv*: Leading zero counter; counts the number of leading zeroes in Sm and outputs count to Mcnt. Normalization happens afterward in the top module, producing Smnorm and Senorm.
+- *rne.sv*: Performs Round to Nearest Even on normalized sum and outputs Smrnd and Sernd. Top module selects between RNE output and Round to Zero to pass as int_result.
+-*fmaflags.sv*: Generates flags and modifies int_result based on special cases, outputting to result.
 
 **Summary of Major Optimizations:**  
-  No major optimizations were performed. However, for some use cases, a Round-to-Zero (RZ) round mode can be used. Depending on the application this could help reduce timing as long as the rounding does not need to be as detailed as RNE.
+  No significant optimization was performed for this FMA. The Round to Zero option may allow for faster computation of the result.
 
 ---
 
 ## Test Results
-Overall, the design passed all tests given. The only test that did not pass was the *baby_torture.sv* test. I believe it is likely to be a problem how the test vectors themselves are input rather than the design.
+The design is able to pass every non-rounding-mode test aside from baby_torture.tv, which may be due to usage of operation control signals that are not required for this project. In the fma_special tests, some of the flags are incorrect, and I was not able to determine the cause.
 
 **Lint Status:**  
-  The design is clean. No errors or warnings when running it through the QuestaSim simulation or synthesis.
+  The Verilator linter catches a small error with undefined bit widths of the summing values in fmaexpadd.sv. This, however, has shown no issue when it comes to HLS.
 
 **Test Coverage:**  
 | Test Name | Status |
@@ -47,32 +47,38 @@ Overall, the design passed all tests given. The only test that did not pass was 
 | baby_torture     | Failed |
 
 **Results on Torture.tv:**  
-  The design failed *baby_torture.sv*. This is believed to be beacuse of its 
+  The design failed *baby_torture.sv*. Stated above, this may be due to features absent in our design that are not required for the project.
 
 ---
 
 ## Synthesis Results
-The design was moved to a different repository to do the synthesis. This repository contains the reports from the synthesis and the exact files used in the synthesis.
+Synthesis results are stored in the *synthDC* folder.
 
 **Hierarchical Area Report:**  
-  
+  The total area of the fma16 is 12213.7402. The module with the largest footprint is *DW_mult_uns*, with an area of 2020.7595 occupying 16.5% of the total area.
 
 **Timing Report:**  
-    
+  My logic was clocked at 485 MHz, giving a data required time of 2.061856 ns. The arrival time was 2.061687 ns, giving a slack of 0.000169 ns and meeting the requirement.
 
 **Critical Path Annotated on Block Diagram:**  
-   
+   Critical path is through the rounding unit.
+   ![Annotated Block Diagram](annotated_diagram.png)
 
 **Power Report:**  
-  
+  | Internal Power | Switching Power | Leakage Power | Total Power |
+  |----------------|-----------------|---------------|-------------|
+  | 1.828588 mW    |  1.981185 mW    | 7.414545e+03 nW |      3.817193 mW|
 
 **Energy-Delay Product (EDP):**  
-  
+  ```
+  E × D = (P × D) × D = 3.817193 mW × 2.061687 ns × 2.061687 ns
+  = 1.62252e-20 Js
+  ```
 
 ---
 
 ## Project Management
-Most of the work on the project was done in the last few weeks of the allotted time, due to various reasons. 
+Due to poor time management decisions, all of the work on the project was completed during the final week.
 
 **Weekly Time Spent Table:**
 
@@ -81,15 +87,19 @@ Most of the work on the project was done in the last few weeks of the allotted t
 | 1 (10/27)     | 0     |
 | 2 (11/3)      | 0     |
 | 3 (11/10)     | 0     |
-| 4 (11/17)     | 1     |
-| 5 (11/24)     | 6     |
-| 6 (12/1)      | 50    |
+| 4 (11/17)     | 0     |
+| 5 (11/24)     | 0     |
+| 6 (12/1)      | 36    |
 
-**Reflections on Lessons Learned:**  
-  Through the process of completing this project, I have come to realize the amount of time it takes to deubg faulty code. Through the semester, I had to put off this project to prioritize other classes. This resulted in needing to quickly debug code within a short amount of time. In the future, I hope to be able to estimate the time it will take to complete a hardware design project with a higher accuracy, possibly overestimating the time it takes so that the process is not as stressful.
+**Reflections on lessons for future hardware design projects:**  
+  The intense time crunch of this week has taught me two very powerful lessons: to prioritize steady progress on longer-term projects and to make sure smaller components are fully tested and verified before further integration. For me, this project was a panicked attempt at throwing everything together as quickly as possible, resulting in a massive debugging headache that I was not able to fully solve. Were I to do this again, I would space out my work over a much longer time, and I would have a much stronger focus on verifying individual components, rather than just the full product.
+
+---
+
+## Time spent: Planning, coding, debugging, user tests, optimizing, report
+Due to the rushed nature of this, very little time was spent planning or optimizing. Coding took roughly 8 hours of the time, and the report took roughly two hours. Testing and debugging, on the other hand, took the entire rest of my time spent on the project, likely totalling over 30 hours in these few days.
 
 ---
 
 ## Conclusion
-The FMA design was almost successfully simulated. Errors occur in the special cases for a half precision FMA. However, the faulty FMA was able to synthesize, resulting in PPA reports for the design.
-
+I believe that I made a strong attempt at a fully-functional FMA, and was able to gain a much stronger understanding of floating-point number storage and arithmetic. The FMA is not completely finished, but it can still correctly compute the majority of the tests sets given.
