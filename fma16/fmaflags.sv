@@ -1,4 +1,4 @@
-module fmaflags (input logic Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, Xinf, Yinf, Zinf, XZero, YZero, ZZero, ASticky, logic [35:0] Smnorm, logic [6:0] Senorm, logic [15:0] int_result,
+module fmaflags (input logic Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, Xinf, Yinf, Zinf, XZero, YZero, ZZero, ASticky, logic [1:0] roundmode, logic [35:0] Smnorm, logic [6:0] Senorm, logic [15:0] int_result,
                 output logic [15:0] adjusted_result, logic flag_nv, flag_of, flag_uf, flag_nx);
 
     always_comb begin
@@ -38,9 +38,10 @@ module fmaflags (input logic Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, 
             flag_of = 1'b0;
         end
         // Otherwise just take normal value
-        else if (Senorm >= 5'd31) begin
+        //else if (Senorm >= 5'd31) begin
+        else if ((&Senorm[4:0] | Senorm[5]) & ~Senorm[6]) begin
             flag_of = 1'b1;
-            adjusted_result = {int_result[15], 15'b111101111111111};
+            adjusted_result = roundmode[0] ? {int_result[15], 5'h1f, 10'b0} : {int_result[15], 15'b111101111111111};
             flag_nv = 1'b0;
         end
         else begin
@@ -48,18 +49,6 @@ module fmaflags (input logic Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, 
             flag_nv = 1'b0;
             flag_of = 1'b0;
         end
-      /*else if (Xinf | Yinf) begin
-         if (Zinf & (Ps ^ Zs)) begin
-            result = 16'h7e00;
-            flags[3] = 1'b1;
-         end
-         else begin
-            result = {Ps, 5'h1f, 10'b0};
-         end
-      end
-      else if (Zinf) begin
-         result = {Zs, 5'h1f, 10'b0};
-      end*/
     end
     // L = Smnorm[25]
     // G = Smnorm[24]

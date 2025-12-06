@@ -97,11 +97,11 @@ module fma16 (x, y, z, mul, add, negr, negz,
          int_result = {(((~Smzero)|(Zs&ZZero))? Ss : 1'b0), Sernd[4:0], Smrnd};
       end
       else begin
-         int_result = {(((~Smzero)|(Zs&ZZero))? Ss : 1'b0), Senorm[4:0], Smnorm[34:25]}; // broken
+         int_result = {(((~Smzero)|(Zs&ZZero))? Ss : 1'b0), Senorm[4:0], Smnorm[34:25]};
       end
    end
 
-   fmaflags set_nv (Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, Xinf, Yinf, Zinf, XZero, YZero, ZZero, ASticky, Smnorm, Senorm, int_result, result, flags[3], flags[2], flags[1], flags[0]);
+   fmaflags set_nv (Xs, Ys, Zs, Xsnan, Ysnan, Zsnan, Xnan, Ynan, Znan, Xinf, Yinf, Zinf, XZero, YZero, ZZero, ASticky, roundmode, Smnorm, Senorm, int_result, result, flags[3], flags[2], flags[1], flags[0]);
    //assign result = {Ss, Sernd[4:0], Smrnd};
    //assign result = {Ss, Senorm[4:0], Smnorm[34:25]};
 

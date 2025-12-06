@@ -374,9 +374,9 @@ def binary16_to_float(hex_val):
     return value
 
 if __name__ == "__main__":
-    x = 0x0400   # 2^-14 ≈ 6.1035e-05
-    y = 0xbc00   # 32.0
-    z = 0x0400   # 0.5
+    x = 0x4000   # 2^-14 ≈ 6.1035e-05
+    y = 0x7800   # 32.0
+    z = 0x8400   # 0.5
     out = fma_binary16(x, y, z, verbose=True)
     print(f"\nResult packed: 0x{out['result']:04X}")
     

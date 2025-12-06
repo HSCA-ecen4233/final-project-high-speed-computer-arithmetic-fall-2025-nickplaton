@@ -1,8 +1,10 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/TAzrG3QF)
-# HSCAF25-project
+# High Speed Computer Arithmetic Final Project Fall 2025
+
+###### Thomas Parsley
 
 ## Introduction
 **Completed FMA Block Diagram:**  
+  
 
 **Explanation of Architecture:**  
   In this design, there are 11 major blocks that perform functions of the FMA:
