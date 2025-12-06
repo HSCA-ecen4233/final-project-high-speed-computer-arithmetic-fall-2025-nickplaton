@@ -1,0 +1,31 @@
+ 
+****************************************
+Report : timing
+        -path full
+        -delay min
+        -max_paths 1
+Design : fma16
+Version: W-2024.09-SP4-1
+Date   : Fri Dec  5 20:27:36 2025
+****************************************
+
+Operating Conditions: PVT_1P2V_25C   Library: scc9gena_tt_1.2v_25C
+Wire Load Model Mode: top
+
+  Startpoint: roundmode[0] (input port)
+  Endpoint: result[10] (output port clocked by vclk)
+  Path Group: (none)
+  Path Type: min
+
+  Point                                    Incr       Path
+  -----------------------------------------------------------
+  roundmode[0] (in)                    0.008078   0.008078 r
+  U3811/Y (scc9gena_a21oi_m)           0.017765   0.025843 f
+  U1841/Y (scc9gena_nand2_m)           0.032270   0.058113 r
+  result[10] (out)                     0.000000   0.058113 r
+  data arrival time                               0.058113
+  -----------------------------------------------------------
+  (Path is unconstrained)
+
+
+1

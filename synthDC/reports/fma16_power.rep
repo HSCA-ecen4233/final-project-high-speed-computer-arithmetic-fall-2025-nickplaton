@@ -1,0 +1,56 @@
+ 
+****************************************
+Report : power
+        -analysis_effort low
+Design : fma16
+Version: W-2024.09-SP4-1
+Date   : Fri Dec  5 20:27:36 2025
+****************************************
+
+
+Library(s) Used:
+
+    scc9gena_tt_1.2v_25C (File: /opt/sky90/tech_files/scc9gena_tt_1.2v_25C.db)
+
+
+Operating Conditions: PVT_1P2V_25C   Library: scc9gena_tt_1.2v_25C
+Wire Load Model Mode: top
+
+
+Global Operating Voltage = 1.2  
+Power-specific unit information :
+    Voltage Units = 1V
+    Capacitance Units = 1.000000pf
+    Time Units = 1ns
+    Dynamic Power Units = 1mW    (derived from V,C,T units)
+    Leakage Power Units = 1nW
+
+
+Attributes
+----------
+i - Including register clock pin internal power
+
+
+  Cell Internal Power  = 1.828588 mW   (48%)
+  Net Switching Power  = 1.981189 mW   (52%)
+                         ---------
+Total Dynamic Power    = 3.809777 mW  (100%)
+
+Cell Leakage Power     =   7.4145 uW
+
+Information: report_power power group summary does not include estimated clock tree power. (PWR-789)
+
+                 Internal         Switching           Leakage            Total
+Power Group      Power            Power               Power              Power   (   %    )  Attrs
+--------------------------------------------------------------------------------------------------
+io_pad           0.000000          0.000000          0.000000          0.000000  (   0.00%)
+memory           0.000000          0.000000          0.000000          0.000000  (   0.00%)
+black_box        0.000000          0.000000          0.000000          0.000000  (   0.00%)
+clock_network    0.000000          0.000000          0.000000          0.000000  (   0.00%)  i
+register         0.000000          0.000000          0.000000          0.000000  (   0.00%)
+sequential       0.000000          0.000000          0.000000          0.000000  (   0.00%)
+combinational    1.828588          1.981185        7.414545e+03          3.817193
+                                                                                 ( 100.00%)
+--------------------------------------------------------------------------------------------------
+Total            1.828588 mW       1.981185 mW     7.414545e+03 nW       3.817193 mW
+1
